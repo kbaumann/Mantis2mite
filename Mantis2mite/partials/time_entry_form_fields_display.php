@@ -35,33 +35,106 @@
 	
 	$a_projectBindedRsrces = $o_userMiteData->getBindedRsrcesForMantisProject($i_mantisProjectId);
 	$a_projectUnbindedRsrces = $o_userMiteData->getUnbindedRsrcesForMantisProject($i_mantisProjectId);
-	
-# build select box entries from binded resources    
+
+    ################## added start###################
+    $mite = mite::getInstance();
+    $mite->init('#############','##################');
+    $responseXML = $mite->sendRequest('get','/projects.xml');
+    $mite_projects = $responseXML->xpath('project');
+
+    // get mite customer id from mantis project mapping fields
+    # get field id of Mite Mapping
+    $s_query = "SELECT id FROM ".db_get_table('mantis_custom_field_table')." WHERE name='MiteId1'";
+    $r_result = db_query_bound($s_query);
+    if ((db_num_rows($r_result) > 0)) {
+        while ($a_row = db_fetch_array($r_result)) {
+            $MiteId1_field_id = $a_row["id"];
+        }
+    }
+
+    # get field id of Mite Mapping
+    $s_query = "SELECT id FROM ".db_get_table('mantis_custom_field_table')." WHERE name='MiteId2'";
+    $r_result = db_query_bound($s_query);
+    if ((db_num_rows($r_result) > 0)) {
+        while ($a_row = db_fetch_array($r_result)) {
+            $MiteId2_field_id = $a_row["id"];
+        }
+    }
+
+    # get mite id mapping from custom field table
+    $s_query = "SELECT * FROM ".db_get_table('mantis_custom_field_project_table')." WHERE project_id=".$i_mantisProjectId.
+        " and (field_id = ".$MiteId1_field_id." or field_id = ".$MiteId2_field_id.")";
+    $r_result = db_query_bound($s_query);
+    $MiteId1 = $MiteId2 = 0;
+    if ((db_num_rows($r_result) > 0)) {
+        while ($a_row = db_fetch_array($r_result)) {
+            if($a_row["field_id"]== $MiteId1_field_id){
+                $MiteId1 = $a_row["sequence"];
+            }else if($a_row["field_id"]== $MiteId2_field_id){
+                $MiteId2 = $a_row["sequence"];
+            }
+        }
+    }
+    $MiteCustId = $MiteId1.$MiteId2;
+    ##################### added end ##########################
+
+
+    # build select box entries from binded resources
     foreach ($a_projectBindedRsrces as $s_type => $a_miteRsrces) {
-		
-    	foreach ($a_miteRsrces as $i_rsrc_id => $a_rsrc) {
-    		$a_selectBoxesNewTimeEntry[$s_type] .= 
-				"<option value='".$i_rsrc_id."'>".$a_rsrc['name']."</option>";
-    	}
+
+        ####################### changed start #######################
+        if($s_type == "projects"){
+            foreach ($a_miteRsrces as $i_rsrc_id => $a_rsrc) {
+                // filter binded Projects
+                # loop through all mite projects, search after mite project id with given mite customer id
+                foreach($mite_projects as $mite_project){
+                    $mite_project = (array) $mite_project;
+                    if($mite_project["id"] == $i_rsrc_id && $mite_project["customer-id"] == $MiteCustId){
+                        $a_selectBoxesNewTimeEntry[$s_type] .=  "<option value='".$i_rsrc_id."'>".$a_rsrc['name']."</option>";
+                    }
+                }
+            }
+        }
+
+        if($s_type == "services"){
+            foreach ($a_miteRsrces as $i_rsrc_id => $a_rsrc) {
+                $a_selectBoxesNewTimeEntry[$s_type] .=  "<option value='".$i_rsrc_id."'>".$a_rsrc['name']."</option>";
+            }
+        }
+        ####################### changed end #######################
 	}
 	
-# add unbinded resources as select box entries if any	
+    # add unbinded resources as select box entries if any
 	foreach ($a_projectUnbindedRsrces as $s_type => $a_miteRsrces) {
-		
 		$s_unbindedRsrces = '';
-		
-		foreach ($a_miteRsrces as $i_miteRsrc_id => $a_rsrc) {
-			
-			$s_unbindedRsrces .= "<option value='$i_miteRsrc_id'>".$a_rsrc['name']."</option>";
-		}
-		
-		if (!empty($a_projectBindedRsrces[$s_type])) {
+
+        ####################### changed start #######################
+        if($s_type == "projects"){
+            foreach ($a_miteRsrces as $i_miteRsrc_id => $a_rsrc) {
+                # loop through all mite projects, search after mite project id with given mite customer id
+                foreach($mite_projects as $mite_project){
+                    $mite_project = (array) $mite_project;
+
+                    if($mite_project["id"] == $i_miteRsrc_id && $mite_project["customer-id"] == $MiteCustId){
+                        $s_unbindedRsrces .= "<option value='$i_miteRsrc_id'>".$a_rsrc['name']."</option>";
+                    }
+                }
+
+            }
+        }
+        if($s_type == "services"){
+            foreach ($a_miteRsrces as $i_miteRsrc_id => $a_rsrc) {
+               $s_unbindedRsrces .= "<option value='$i_miteRsrc_id'>".$a_rsrc['name']."</option>";
+            }
+        }
+        ####################### changed end #######################
+
+        if (!empty($a_projectBindedRsrces[$s_type])) {
 			$a_selectBoxesNewTimeEntry[$s_type] .= 
 				"<optgroup label='".lang_get('plugin_mite_other_'.$s_type)."'>".
 					$s_unbindedRsrces.
 				"</optgroup>";
-		}
-		else {
+		}else {
 			$a_selectBoxesNewTimeEntry[$s_type] .= $s_unbindedRsrces;
 		}
 	}
