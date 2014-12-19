@@ -216,7 +216,7 @@
 					lang_get('plugin_mite_help_note_pattern')."</span> 
 				<input type='text' name='plugin_mite_note_new_time_entry' 
 					   id='plugin_mite_note_new_time_entry' autocomplete='off' value='".
-	stripslashes(Mantis2mitePlugin::replacePlaceHolders(current_user_get_field(Mantis2mitePlugin::DB_FIELD_NOTE_PATTERN),
+	stripslashes(Mantis2mitePlugin::replacePlaceHolders('{bug_id} {bug_summary}',
 									$i_bugId))."' />
 			</div>
 			<div class='formularButtons'>
