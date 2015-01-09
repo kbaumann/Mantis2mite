@@ -96,7 +96,7 @@
 		}
 		
 	# get time entries for this bug and 
-	# build a modifieable list as output 
+	# build a modifiable list as output
 	####################################	
 		$s_query = "
 			SELECT * FROM ".
@@ -116,43 +116,40 @@
 	    	}
 	    	
 	    	$i_totalTime += $a_row['mite_duration'];
-	    	
-	    	if ($a_row['mite_note']) {
-	    		$s_noteToggler = "
-	    			<a href='#' class='plugin_mite_time_entry_show_note'>".
-	    				lang_get('plugin_mite_time_entry_show_note')."
-	    				<span>".html_entity_decode($a_row['mite_note'],ENT_QUOTES,'UTF-8')."</span>
-		    		</a>";
-	    	}
-	    	
-	    	$s_userEntries .= "
-	    		<tr>
-	    			<td".$s_cssClass.">";
-	    	
-	    	if ($i_currentUserId == $i_userId) {
-				
-	    		$s_userEntries .= "
-	    			<form>
-	    				<button class='plugin_mite_delete_time_entry'>".
-    						lang_get('plugin_mite_delete_time_entry')."</button>
-	    				<input type='hidden' name = 'mite_id' value = '".$a_row['mite_time_entry_id']."' />
-					</form>";
-	    	}
 
 	    	$s_userEntries .= "
-					</td>
+	    		<tr>
 	    			<td".$s_cssClass.">".$a_row['mite_date_at']."</td>
 	    			<td".$s_cssClass.">".
     		$o_pluginController->decodeValue($a_userMiteData[Mantis2mitePlugin::API_RSRC_P][$a_row['mite_project_id']])."</td>
 	    			<td".$s_cssClass.">".
     		$o_pluginController->decodeValue($a_userMiteData[Mantis2mitePlugin::API_RSRC_S][$a_row['mite_service_id']])."</td>
-	    			<td".$s_cssClass." style='text-align:center'>$s_noteToggler</td>
+	    			<td".$s_cssClass.">".html_entity_decode($a_row['mite_note'],ENT_QUOTES,'UTF-8')."</td>
 	    			<td class='column_hours".(($s_cssClass != '') ? ' firstRow' : '')."'>".
 	    				sprintf($s_patternTwoDigits,
 	    						((int)($a_row['mite_duration'] / 60)),($a_row['mite_duration'] % 60))."
 	    			</td>
-	    		</tr>";
-	    						
+	    			<td".$s_cssClass.">";
+
+            if ($i_currentUserId == $i_userId) {
+                $start = $stop = "";
+                if($a_row['running'] == 1){
+                    $start = "disabled";
+                }else{
+                    $stop = "disabled";
+                }
+                $s_userEntries .= "
+                        <form>
+                            <button class='plugin_mite_start_clock' ".$start.">Start</button>
+                            <button class='plugin_mite_stop_clock' ".$stop.">Stop</button>
+                            <button class='plugin_mite_delete_time_entry'>".
+                    lang_get('plugin_mite_delete_time_entry')."</button>
+                            <input type='hidden' name = 'mite_id' value = '".$a_row['mite_time_entry_id']."' />
+                        </form>";
+            }
+
+			$s_userEntries .= "</td></tr>";
+
 	    	$i_counter++;
 	    	$s_cssClass = $s_noteToggler = '';				
 		}
@@ -181,21 +178,21 @@
 			$s_output .= "
 				<table style='width:100%'>
 				<colgroup>
-				    <col width='120px'>
 				    <col width='100px'>
+				    <col width='250px'>
+				    <col width='250px'>
 				    <col width='*'>
-				    <col width='*'>
-				    <col width='25px'>
 				    <col width='60px'>
+				    <col width='100px'>
 				  </colgroup>
 				<thead>
 				<tr>
-					<th></th>
 					<th>".lang_get('plugin_mite_time_entry_header_date_added')."</th>
 					<th>".lang_get('plugin_mite_time_entry_header_mite_project')."</th>
 					<th>".lang_get('plugin_mite_time_entry_header_mite_service')."</th>
 					<th>".lang_get('plugin_mite_time_entry_header_mite_note')."</th>
 					<th class='column_hours'>".lang_get('plugin_mite_time_entry_header_mite_hours')."</th>
+					<th></th>
 				</tr>
 				</thead>
 				<tbody>". 
@@ -203,13 +200,14 @@
 				</tbody>
 				<tfoot>
 				<tr>
-					<td></td>
+
 					<td class='label_total_hours' colspan='4'>".
 						lang_get('plugin_mite_time_entry_header_mite_total_hours')."
 					</td>
 					<td class='column_hours'>".
 						sprintf($s_patternTwoDigits,((int)($i_totalTime / 60)),($i_totalTime % 60))."
 					</td>
+					<td></td>
 				</tr>
 				</tfoot>
 				</table>";

@@ -38,7 +38,7 @@
 
     ################## added start###################
     $mite = mite::getInstance();
-    $mite->init('#############','##################');
+    $mite->init('a981c0d9cab13950','marmalade');
     $responseXML = $mite->sendRequest('get','/projects.xml');
     $mite_projects = $responseXML->xpath('project');
 
@@ -177,10 +177,13 @@
 				</label>
 				<input type='text' name='plugin_mite_date_new_time_entry'
 					   id='plugin_mite_date_new_time_entry' value='".date('Y-m-d')."' />
-				<span class='plugin_mite_user_input_helper'>
-					<a tabIndex='-1' href='#'>?</a></span>
-				<span class='plugin_mite_user_input_helper_text' style='display:none'>".
-					lang_get('plugin_mite_date_help_text')."</span>	   
+			</div>
+			<div class='time_entry_param'>
+                    <label for='plugin_mite_hours_new_time_entry'>".
+        lang_get('plugin_mite_header_hours_new_time_entry')."
+                    </label>
+                    <input type='text' name='plugin_mite_hours_new_time_entry'
+                           id='plugin_mite_hours_new_time_entry' value='0:00'/>
 			</div>
 			<div class='time_entry_param'>
 				<label for='plugin_mite_projects_new_time_entry'>".
@@ -194,38 +197,24 @@
 				</label>".
 				$a_selectBoxesNewTimeEntry[Mantis2mitePlugin::API_RSRC_S] . "
 			</div>
-			
-			<div class='time_entry_param'>
-				<label for='plugin_mite_hours_new_time_entry'>".
-					lang_get('plugin_mite_header_hours_new_time_entry')."
-				</label>
-				<input type='text' name='plugin_mite_hours_new_time_entry' 
-					   id='plugin_mite_hours_new_time_entry' value='0:00'/>
-				<span class='plugin_mite_user_input_helper'>
-					<a tabIndex='-1' href='#'>?</a></span>
-				<span class='plugin_mite_user_input_helper_text' style='display:none'>".
-					lang_get('plugin_mite_hours_help_text')."</span>
-			</div>
 			<div class='time_entry_param'>
 				<label for='plugin_mite_note_new_time_entry'>".
-					lang_get('plugin_mite_header_note_new_time_entry')."
+        lang_get('plugin_mite_header_note_new_time_entry')."
 				</label>
-				<span class='plugin_mite_user_input_helper'>
-					<a tabIndex='-1' href='#'>?</a></span>
-				<span class='plugin_mite_user_input_helper_text' style='display:none'>".
-					lang_get('plugin_mite_help_note_pattern')."</span> 
-				<input type='text' name='plugin_mite_note_new_time_entry' 
+				<input type='text' name='plugin_mite_note_new_time_entry'
 					   id='plugin_mite_note_new_time_entry' autocomplete='off' value='".
-	stripslashes(Mantis2mitePlugin::replacePlaceHolders('{bug_id} {bug_summary}',
-									$i_bugId))."' />
+        stripslashes(Mantis2mitePlugin::replacePlaceHolders('{bug_id} {bug_summary}',
+            $i_bugId))."' />
 			</div>
+
 			<div class='formularButtons'>
-				<div class='buttonsRight'>
+
+				<div class='buttonsLeft'>
 					<button type='submit' id='plugin_mite_add_new_time_entry'>".
 						lang_get('plugin_mite_add_new_time_entry') ."
 					</button>
 				</div>
-				<div class='buttonsLeft'>
+				<div class='buttonsRight'>
 					<a href='#' id='plugin_mite_cancel_adding_time_entry'>".
 						lang_get('plugin_mite_cancel_adding_time_entry') ."
 					</a>

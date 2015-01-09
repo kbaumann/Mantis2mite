@@ -119,11 +119,15 @@ var MITE_TE = function() {
 	var initTimeEntriesPartialHandler = function() {
 		
 		var $o_btnDeleteEntry 			 	  = $('.plugin_mite_delete_time_entry'),
+            $o_btnStopClockEntry              = $('.plugin_mite_stop_clock'),
+            $o_btnStartClockEntry             = $('.plugin_mite_start_clock'),
 			$o_linksShowNote	  			  = $('.plugin_mite_time_entry_show_note'),
 			$o_linksShowOtherUsersTimeEntries = $('.plugin_mite_time_show_entries_other_user'),
 			$o_otherUsersTimeEntries  	 	  = $('.plugin_mite_time_entries_other_user'),
-			s_initialTextDeleteTimeEntry 	  = $o_btnDeleteEntry.val(), 
-			i_idMantis = i_idMite = 0;
+			s_initialTextDeleteTimeEntry 	  = $o_btnDeleteEntry.val(),
+            s_initialTextStopClockEntry 	  = $o_btnStopClockEntry.val(),
+            s_initialTextStartClockEntry 	  = $o_btnStartClockEntry.val(),
+            i_idMantis = i_idMite = 0;
 		
 		$o_otherUsersTimeEntries.css('display','none');
 		
@@ -190,6 +194,63 @@ var MITE_TE = function() {
 				return false;
 			});
 		});
+
+        $o_btnStartClockEntry.each(function(){
+
+            $(this).click(function(e) {
+                $.ajax({
+                    type: "POST",
+                    dataType: "xml",
+                    data: {action:'startClock',
+                        data:$(this).parent("form").serialize()},
+                    url: MITE.makePartialPath('time_entry_process','xml'),
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        MITE.showMsg('error',"Fehler beim Starten der Stopuhr");
+                        MITE.printToConsole(
+                         'failedAjaxRequest',
+                         {file   : MITE.makePartialPath('time_entry_process'),
+                         details: textStatus}
+                         );
+                    },
+                    success: function(xmlData) {
+                        MITE.showMsg('success',"Stopuhr für Eintrag erfolgreich gestartet");
+                        loadTimeEntriesPartial();
+                    }
+                });
+
+                e.preventDefault();
+                return false;
+            });
+        });
+
+        $o_btnStopClockEntry.each(function(){
+
+            $(this).click(function(e) {
+                $.ajax({
+                    type: "POST",
+                    dataType: "xml",
+                    data: {action:'stopClock',
+                        data:$(this).parent("form").serialize()},
+                    url: MITE.makePartialPath('time_entry_process','xml'),
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        MITE.showMsg('error','Fehler beim Anhalten der Uhr');
+                        MITE.printToConsole(
+                            'failedAjaxRequest',
+                            {file   : MITE.makePartialPath('time_entry_process'),
+                                details: textStatus}
+                        );
+                    },
+                    success: function(xmlData) {
+                        MITE.showMsg('success',"Stopuhr für Eintrag erfolgreich angehalten");
+                        loadTimeEntriesPartial();
+                    }
+                });
+               // alert($(this).parent("form").serialize());
+
+                e.preventDefault();
+                return false;
+            });
+        });
 	}//initTimeEntriesPartialHandler
 	
 	
@@ -248,8 +309,8 @@ var MITE_TE = function() {
 			processNewTimeEntryFormData();
 			return false;
 		});
-		
-		
+
+
 	/*****************************************************
 	 * Performs AJAX request to partial 'time_entry_process' which sends
 	 * a new time entry (based on the formular params) to MITE 
@@ -323,9 +384,8 @@ var MITE_TE = function() {
 	    				$o_sbServiceNewTimeEntry.focus();
 	    		}
 	  		});
-		}	
-		
-		
+		}
+
 	/*****************************************************
 	 * Shows the helper text when hovering a helper link 
 	 */
@@ -350,8 +410,8 @@ var MITE_TE = function() {
 			});
 		});
 	}
-	
-//############	
+
+//############
 // public METHODS
 //#######	
 	return {
@@ -378,4 +438,6 @@ var MITE_TE = function() {
 	
 	};//END of MITE_TE return values
 	
-}();//execute function instantly to return the object in the global namespace  
+}();//execute function instantly to return the object in the global namespace
+
+

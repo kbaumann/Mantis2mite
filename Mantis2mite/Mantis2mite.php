@@ -89,7 +89,9 @@ class Mantis2mitePlugin extends MantisPlugin {
 			mite_date_at		D	NOTNULL DEFAULT 0,
 			mite_note			X 	NOTNULL DEFAULT \" '' \",
 			updated_at			T	NOTNULL DEFTIMESTAMP,
-			created_at			T	NOTNULL DEFAULT 0",
+			created_at			T	NOTNULL DEFAULT 0,
+			stopped_at			T	NOTNULL DEFAULT 0,
+			running 			I	UNSIGNED NOTNULL DEFAULT '0'",
 		
 		self::DB_TABLE_PS => "
 			id							I		UNSIGNED NOTNULL PRIMARY AUTOINCREMENT,

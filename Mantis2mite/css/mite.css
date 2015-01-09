@@ -196,7 +196,13 @@ div.plugin_mite_positive_connection_status, div.plugin_mite_negative_connection_
 	border-left: 1px solid #888;
 	padding-left: 0.3em;
 	padding-right: 0;
-	text-align: right;
+	text-align: left;
+}
+
+.plugin_mite_time_entries table td,
+.plugin_mite_time_entries table th{
+    border-left: 1px solid #888;
+    padding-left: 0.3em;
 }
 
 #plugin_mite_show_new_time_entry_form {
@@ -228,7 +234,7 @@ div.plugin_mite_positive_connection_status, div.plugin_mite_negative_connection_
 
 #plugin_mite_note_new_time_entry {
 	width: 95%;
-	margin-top: 10px;
+	margin-top: 0;
 }
 
 #plugin_mite_date_new_time_entry {

@@ -86,7 +86,7 @@
 	$s_plugin_mite_save_bindings_active = 'Präferenzen speichern ...';
 	$s_plugin_mite_disconnect_account_data = 'Verbindung lösen';
 	$s_plugin_mite_disconnecting_account_data_active = 'Verbindung lösen...';
-	$s_plugin_mite_add_new_time_entry = 'Ab mit der Zeit zu <em>mite</em>';
+	$s_plugin_mite_add_new_time_entry = 'Eintrag erstellen';
 	$s_plugin_mite_msg_adding_new_time_entry = 'Ab mit der Zeit zu <em>mite</em>...';
 	$s_plugin_mite_show_new_time_entry_form = 'Zeiteintrag hinzufügen';
 	$s_plugin_mite_showing_new_time_entry_form = 'Zeiteintrag hinzufügen...';

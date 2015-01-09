@@ -65,7 +65,7 @@
 		$s_note = str_replace("&","&amp;",$s_note);
 		$s_note = str_replace("<","&lt;",$s_note);
 		$s_note = str_replace(">","&gt;",$s_note);
-		$s_note = str_replace("Š","&auml;",$s_note);
+		$s_note = str_replace("ï¿½","&auml;",$s_note);
 				   								   	 
 		$m_postedTime = $a_data['plugin_mite_hours_new_time_entry'];
 		
@@ -163,8 +163,71 @@
 			echo "<error>".$e->getMessage()."</error>";
 			exit;
 		}
-	}
-	
+
+################################
+# Handling time entry with clock
+################################
+
+    }elseif($_POST['action'] == 'startClock'){
+        // get time entry from mite, resolve id + start time + minutes
+        $o_responseXml = $o_miteRemote->sendRequest('get','/time_entries/'.$a_data['mite_id'].'.xml');
+        // build xml request for mite api
+        $s_postRequest_startClock = sprintf('
+			 <tracker>
+               <tracking-time-entry>
+                  <minutes type="integer">%d</minutes>
+                  <since type="datetime">%s</since>
+                  <id type="integer">%d</id>
+               </tracking-time-entry>
+            </tracker>',
+            intval($i_timeInMinutes),
+            $o_responseXml->{'created-at'},
+            $o_responseXml->id
+        );
+
+        try {
+            $o_responseXmlStart = $o_miteRemote->sendRequest('put','/tracker/'.$a_data['mite_id'].'.xml', $s_postRequest_startClock);
+
+            // update mantis database, currently entry running true
+            $s_query = sprintf("
+	         UPDATE $s_tableTimeEntries
+			 SET running = 1
+			 WHERE mite_time_entry_id = %d AND user_id = %d",
+                $a_data['mite_id'],
+                auth_get_current_user_id());
+
+            $r_result = db_query_bound($s_query);
+
+        } catch (Exception $e) {
+            # EXIT on function errors
+            echo "<error>".$e->getMessage()." mite_id: ".$a_data['mite_id']."</error>";
+            exit;
+        }
+
+    }elseif($_POST['action'] == 'stopClock'){
+        // get time entry from mite, resolve id + start time + minutes
+        $o_responseXmlEntry = $o_miteRemote->sendRequest('get','/time_entries/'.$a_data['mite_id'].'.xml');
+
+        try {
+            $o_responseXml = $o_miteRemote->sendRequest('delete','/tracker/'.$a_data['mite_id'].'.xml');
+
+            // Update duration in mantis database
+            $s_query = sprintf("
+                 UPDATE $s_tableTimeEntries
+                 SET mite_duration=%d, running=0
+                 WHERE mite_time_entry_id = %d AND user_id = %d",
+                 $o_responseXmlEntry->minutes,
+                 $a_data['mite_id'],
+                 auth_get_current_user_id());
+            $r_result = db_query_bound($s_query);
+
+
+        } catch (Exception $e) {
+            # EXIT on function errors
+            echo "<error>".$e->getMessage()." mite_id: ".$a_data['mite_id']."</error>";
+            exit;
+        }
+    }
 #########################
 # DELETING a time entry
 #########################	
@@ -188,6 +251,5 @@
 	
 		$r_result = db_query_bound($s_query);
 	}
-	
 	echo "<messages datetimestamp='".gmdate('Y-m-d H:i:s')."'></messages>";
 ?>
