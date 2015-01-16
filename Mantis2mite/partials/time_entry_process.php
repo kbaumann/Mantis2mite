@@ -171,8 +171,8 @@
     }elseif($_POST['action'] == 'startClock'){
 
         try {
-            // send clock start request to mite for entry with given mite id
-            $o_responseXmlStart = $o_miteRemote->sendRequest('put','/tracker/'.$a_data['mite_id'].'.xml');
+            // get current tracking info
+            $o_responseXmlTracking = $o_miteRemote->sendRequest('get','/time_entries.xml?limit=10');
 
             // update mantis database, currently entry running true
             $s_query = sprintf("
@@ -183,6 +183,32 @@
                 auth_get_current_user_id());
 
             $r_result = db_query_bound($s_query);
+
+            // check whether an entry was stopped due to starting another entry
+            // get all time entries
+            $allEntries = $o_responseXmlTracking->xpath('/time-entries/time-entry/id');
+
+            // loop through items to find the one which is currently tracking and has to be stopped and saved to mantis
+            while(list( , $id) = each($allEntries)) {
+                $o_responseXmlOldEntry = $o_miteRemote->sendRequest('get','/time_entries/'.$id.'.xml');
+                $trackedMinutes = $o_responseXmlOldEntry->xpath('/time-entry/tracking/minutes');
+                if(isset($trackedMinutes[0])){
+                    //echo "tracked: ". $id ." minutes: ".$trackedMinutes[0] ;
+
+                    // stop old entry, set running 0, save duration
+                    $s_query = sprintf("
+                     UPDATE $s_tableTimeEntries
+                     SET mite_duration=%d, running=0
+                     WHERE mite_time_entry_id = %d AND user_id = %d",
+                    $trackedMinutes[0],
+                    $id,
+                    auth_get_current_user_id());
+                    $r_result = db_query_bound($s_query);
+                }
+            }
+
+            // send clock start request to mite for new entry with given mite id
+            $o_responseXmlStart = $o_miteRemote->sendRequest('put','/tracker/'.$a_data['mite_id'].'.xml');
 
         } catch (Exception $e) {
             # EXIT on function errors
