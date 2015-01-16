@@ -200,11 +200,11 @@
 			<div class='time_entry_param'>
 				<label for='plugin_mite_note_new_time_entry'>".
         lang_get('plugin_mite_header_note_new_time_entry')."
-				</label>
+				<span id='bugid'>  #".stripslashes(Mantis2mitePlugin::replacePlaceHolders('{bug_id}',$i_bugId))."</span></label>
+
 				<input type='text' name='plugin_mite_note_new_time_entry'
 					   id='plugin_mite_note_new_time_entry' autocomplete='off' value='".
-        stripslashes(Mantis2mitePlugin::replacePlaceHolders('{bug_id} {bug_summary}',
-            $i_bugId))."' />
+        stripslashes(Mantis2mitePlugin::replacePlaceHolders('{bug_summary}',$i_bugId))."' />
 			</div>
 
 			<div class='formularButtons'>

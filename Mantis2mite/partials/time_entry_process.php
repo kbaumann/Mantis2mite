@@ -131,7 +131,7 @@
 			</time-entry>",
 		  	Mantis2mitePlugin::mysqlDate($a_data['plugin_mite_date_new_time_entry']),
 		  	intval($i_timeInMinutes),
-		  	urldecode($s_note),
+		  	urldecode("#".$a_data['plugin_mite_current_bug']." ".$s_note),
 		  	intval($a_data['plugin_mite_services_new_time_entry']),
 		  	intval($a_data['plugin_mite_projects_new_time_entry'])
 		);
@@ -152,7 +152,7 @@
 				intval($a_data['plugin_mite_services_new_time_entry']),
 				$i_timeInMinutes,
 				Mantis2mitePlugin::mysqlDate($o_responseXml->{'date-at'},true),
-				htmlentities($s_note,ENT_QUOTES,'UTF-8'),
+				htmlentities("#".$a_data['plugin_mite_current_bug']." ".$s_note,ENT_QUOTES,'UTF-8'),
 				Mantis2mitePlugin::mysqlDate($o_responseXml->{'created-at'}),
 				Mantis2mitePlugin::mysqlDate($o_responseXml->{'created-at'})
 			);
@@ -228,9 +228,10 @@
             // Update mantis database, set running to 0, set duration to accumulated minutes (measured + already saved minutes)
             $s_query = sprintf("
                  UPDATE $s_tableTimeEntries
-                 SET mite_duration=%d, running=0
+                 SET mite_duration=%d, running=0, stopped_at='%s'
                  WHERE mite_time_entry_id = %d AND user_id = %d",
                  $trackedMinutes[0],
+                 Mantis2mitePlugin::mysqlDate(),
                  $a_data['mite_id'],
                  auth_get_current_user_id());
             $r_result = db_query_bound($s_query);

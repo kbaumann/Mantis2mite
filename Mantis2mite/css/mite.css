@@ -228,17 +228,27 @@ div.plugin_mite_positive_connection_status, div.plugin_mite_negative_connection_
 	margin: 0.3em 0 0.25em 0
 }
 
+#bugid{
+    font-weight: normal !important;
+}
+
+#plugin_mite_projects_new_time_entry, #plugin_mite_services_new_time_entry {
+    width: 100%;
+}
+
 #plugin_mite_hours_new_time_entry {
-	width: 4em;
+    text-align: center;
+    width: 2.5em;
 }
 
 #plugin_mite_note_new_time_entry {
-	width: 95%;
+	width: 98%;
 	margin-top: 0;
 }
 
 #plugin_mite_date_new_time_entry {
-	width: 80px;
+	width: 70px;
+    text-align: center;
 }
 
 #plugin_mite_new_time_entry fieldset {

@@ -328,12 +328,10 @@ var MITE_TE = function() {
 				MITE.showMsg("error",MITE.getMsg('invalidDate'));
 				$o_fieldDateNewTimeEntry.focus().select();
 				return false;
-			}	
-			
-			
-		// check for a given time 	
+			}
+
 			/*if ($o_fieldHoursNewTimeEntry.val() == '0:00') {
-				
+
 				MITE.showMsg("error",MITE.getMsg('missingTimeEntryHours'));
 				$o_fieldHoursNewTimeEntry.focus().select();
 				return false;
@@ -363,7 +361,35 @@ var MITE_TE = function() {
 					);
 				},
 				success: function(xmlData) {
-					
+                    /*
+                    if ($o_fieldHoursNewTimeEntry.val() == '0:00') {
+
+                       alert("start clock");
+
+
+                        $.ajax({
+                            type: "POST",
+                            dataType: "xml",
+                            data: {action:'startClock',
+                                data:$(this).parent("form").serialize()},
+                            url: MITE.makePartialPath('time_entry_process','xml'),
+                            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                MITE.showMsg('error',"Fehler beim Starten der Stopuhr");
+                                MITE.printToConsole(
+                                    'failedAjaxRequest',
+                                    {file   : MITE.makePartialPath('time_entry_process'),
+                                        details: textStatus}
+                                );
+                            },
+                            success: function(xmlData) {
+                                MITE.showMsg('success',"Stopuhr für Eintrag erfolgreich gestartet");
+                                loadTimeEntriesPartial();
+                            }
+                        });
+
+                     }*/
+
+
 					MITE.checkXMLData(xmlData,'AddingTimeEntry',function(){
 						$o_fieldHoursNewTimeEntry.val('0:00');
 						$o_sbProjectNewTimeEntry.find('option:first').attr('selected','selected');
