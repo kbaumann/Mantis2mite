@@ -38,7 +38,7 @@
 
     ################## added start###################
     $mite = mite::getInstance();
-    $mite->init('a981c0d9cab13950','marmalade');
+    $mite->init('################','####');
     $responseXML = $mite->sendRequest('get','/projects.xml');
     $mite_projects = $responseXML->xpath('project');
 
@@ -183,7 +183,7 @@
         lang_get('plugin_mite_header_hours_new_time_entry')."
                     </label>
                     <input type='text' name='plugin_mite_hours_new_time_entry'
-                           id='plugin_mite_hours_new_time_entry' value='0:00'/>
+                           id='plugin_mite_hours_new_time_entry' autocomplete='off' value='0:00'/>
 			</div>
 			<div class='time_entry_param'>
 				<label for='plugin_mite_projects_new_time_entry'>".
