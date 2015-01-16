@@ -332,12 +332,12 @@ var MITE_TE = function() {
 			
 			
 		// check for a given time 	
-			if ($o_fieldHoursNewTimeEntry.val() == '0:00') {
+			/*if ($o_fieldHoursNewTimeEntry.val() == '0:00') {
 				
 				MITE.showMsg("error",MITE.getMsg('missingTimeEntryHours'));
 				$o_fieldHoursNewTimeEntry.focus().select();
 				return false;
-			}
+			}*/
 			
 			$o_btnAddNewTimeEntry.attr('disabled', true)
 								 .html(MITE.addIndicator(MITE.getMsg('addingNewTimeEntry')));
