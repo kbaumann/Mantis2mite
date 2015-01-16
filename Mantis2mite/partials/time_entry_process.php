@@ -139,7 +139,7 @@
 		try {
 			$o_responseXml = $o_miteRemote->sendRequest('post','/time_entries.xml', $s_postRequest);
 	
-		# add the time entry to the database
+		    # add the time entry to the database
 			$s_query = sprintf("
 		        INSERT INTO $s_tableTimeEntries
 				 (user_id,bug_id,mite_time_entry_id,mite_project_id,mite_service_id,
@@ -169,24 +169,10 @@
 ################################
 
     }elseif($_POST['action'] == 'startClock'){
-        // get time entry from mite, resolve id + start time + minutes
-        $o_responseXml = $o_miteRemote->sendRequest('get','/time_entries/'.$a_data['mite_id'].'.xml');
-        // build xml request for mite api
-        $s_postRequest_startClock = sprintf('
-			 <tracker>
-               <tracking-time-entry>
-                  <minutes type="integer">%d</minutes>
-                  <since type="datetime">%s</since>
-                  <id type="integer">%d</id>
-               </tracking-time-entry>
-            </tracker>',
-            intval($i_timeInMinutes),
-            $o_responseXml->{'created-at'},
-            $o_responseXml->id
-        );
 
         try {
-            $o_responseXmlStart = $o_miteRemote->sendRequest('put','/tracker/'.$a_data['mite_id'].'.xml', $s_postRequest_startClock);
+            // send clock start request to mite for entry with given mite id
+            $o_responseXmlStart = $o_miteRemote->sendRequest('put','/tracker/'.$a_data['mite_id'].'.xml');
 
             // update mantis database, currently entry running true
             $s_query = sprintf("
@@ -207,16 +193,18 @@
     }elseif($_POST['action'] == 'stopClock'){
         // get time entry from mite, resolve id + start time + minutes
         $o_responseXmlEntry = $o_miteRemote->sendRequest('get','/time_entries/'.$a_data['mite_id'].'.xml');
+        $trackedMinutes = $o_responseXmlEntry->xpath('/time-entry/tracking/minutes');
 
         try {
+            // send delete tracker entry to mite
             $o_responseXml = $o_miteRemote->sendRequest('delete','/tracker/'.$a_data['mite_id'].'.xml');
 
-            // Update duration in mantis database
+            // Update mantis database, set running to 0, set duration to accumulated minutes (measured + already saved minutes)
             $s_query = sprintf("
                  UPDATE $s_tableTimeEntries
                  SET mite_duration=%d, running=0
                  WHERE mite_time_entry_id = %d AND user_id = %d",
-                 $o_responseXmlEntry->minutes,
+                 $trackedMinutes[0],
                  $a_data['mite_id'],
                  auth_get_current_user_id());
             $r_result = db_query_bound($s_query);
