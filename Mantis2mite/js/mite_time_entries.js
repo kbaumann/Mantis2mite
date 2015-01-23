@@ -8,22 +8,6 @@ jQuery(window).load(function(){
 	MITE_TE.init();
 });
 
-function xml_to_string(xml_node)
-{
-    if (xml_node.xml)
-        return xml_node.xml;
-    else if (XMLSerializer)
-    {
-        var xml_serializer = new XMLSerializer();
-        return xml_serializer.serializeToString(xml_node);
-    }
-    else
-    {
-        alert("ERROR: Extremely old browser");
-        return "";
-    }
-}
-
 // ##########################
 // Create a new NAMESPACE for all actions on a bug view page
 // and return an object with methods to access it.

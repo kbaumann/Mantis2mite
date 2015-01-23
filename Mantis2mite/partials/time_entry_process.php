@@ -196,8 +196,6 @@
                 $o_responseXmlOldEntry = $o_miteRemote->sendRequest('get','/time_entries/'.$id.'.xml');
                 $trackedMinutes = $o_responseXmlOldEntry->xpath('/time-entry/tracking/minutes');
                 if(isset($trackedMinutes[0])){
-                    //echo "tracked: ". $id ." minutes: ".$trackedMinutes[0] ;
-
                     // stop old entry, set running 0, save duration
                     $s_query = sprintf("
                      UPDATE $s_tableTimeEntries
