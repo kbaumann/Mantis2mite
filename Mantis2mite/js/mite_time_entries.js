@@ -6,8 +6,23 @@ jQuery(window).load(function(){
 		return;
 	}
 	MITE_TE.init();
-});	
-	
+});
+
+function xml_to_string(xml_node)
+{
+    if (xml_node.xml)
+        return xml_node.xml;
+    else if (XMLSerializer)
+    {
+        var xml_serializer = new XMLSerializer();
+        return xml_serializer.serializeToString(xml_node);
+    }
+    else
+    {
+        alert("ERROR: Extremely old browser");
+        return "";
+    }
+}
 
 // ##########################
 // Create a new NAMESPACE for all actions on a bug view page
@@ -245,7 +260,6 @@ var MITE_TE = function() {
                         loadTimeEntriesPartial();
                     }
                 });
-               // alert(jQuery(this).parent("form").serialize());
 
                 e.preventDefault();
                 return false;
@@ -329,13 +343,6 @@ var MITE_TE = function() {
 				$o_fieldDateNewTimeEntry.focus().select();
 				return false;
 			}
-
-			/*if ($o_fieldHoursNewTimeEntry.val() == '0:00') {
-
-				MITE.showMsg("error",MITE.getMsg('missingTimeEntryHours'));
-				$o_fieldHoursNewTimeEntry.focus().select();
-				return false;
-			}*/
 			
 			$o_btnAddNewTimeEntry.attr('disabled', true)
 								 .html(MITE.addIndicator(MITE.getMsg('addingNewTimeEntry')));
@@ -343,7 +350,6 @@ var MITE_TE = function() {
 		// replace all '+' signs with an alias since jquery's serialize function 
 		// will replace all spaces with a '+', so there's later on no way to tell
 		// if the '+' was a space or not
-			
 			$o_fieldNoteNewTimeEntry.val($o_fieldNoteNewTimeEntry.val().replace(/\+/g,"@L@"));
 			
 			jQuery.ajax({
@@ -361,33 +367,31 @@ var MITE_TE = function() {
 					);
 				},
 				success: function(xmlData) {
-                    /*
-                    if ($o_fieldHoursNewTimeEntry.val() == '0:00') {
+                    // get mite id from just added entry to start clock immediately
+                    var miteId = jQuery(xmlData).find('messages').attr('mId');
 
-                       alert("start clock");
+                    jQuery.ajax({
+                        type: "POST",
+                        dataType: "xml",
+                        data: {action:'startClock',
+                            data:miteId},
+                        url: MITE.makePartialPath('time_entry_process','xml'),
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            MITE.showMsg('error',"Fehler beim Starten der Stopuhr");
+                            MITE.printToConsole(
+                                'failedAjaxRequest',
+                                {file   : MITE.makePartialPath('time_entry_process'),
+                                    details: textStatus}
+                            );
+                        },
+                        success: function(xmlData) {
+
+                            MITE.showMsg('success',"Stopuhr für Eintrag erfolgreich gestartet");
+                            loadTimeEntriesPartial();
+                        }
+                    });
 
 
-                        jQuery.ajax({
-                            type: "POST",
-                            dataType: "xml",
-                            data: {action:'startClock',
-                                data:jQuery(this).parent("form").serialize()},
-                            url: MITE.makePartialPath('time_entry_process','xml'),
-                            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                                MITE.showMsg('error',"Fehler beim Starten der Stopuhr");
-                                MITE.printToConsole(
-                                    'failedAjaxRequest',
-                                    {file   : MITE.makePartialPath('time_entry_process'),
-                                        details: textStatus}
-                                );
-                            },
-                            success: function(xmlData) {
-                                MITE.showMsg('success',"Stopuhr für Eintrag erfolgreich gestartet");
-                                loadTimeEntriesPartial();
-                            }
-                        });
-
-                     }*/
 
 
 					MITE.checkXMLData(xmlData,'AddingTimeEntry',function(){

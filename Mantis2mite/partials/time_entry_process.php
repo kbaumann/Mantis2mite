@@ -157,18 +157,21 @@
 				Mantis2mitePlugin::mysqlDate($o_responseXml->{'created-at'})
 			);
 			$r_result = db_query_bound($s_query);
-			
+			echo "<messages mId='".$o_responseXml->id."' datetimestamp='".gmdate('Y-m-d H:i:s')."'></messages>";
+            exit;
 		} catch (Exception $e) {
 		# EXIT on function errors
 			echo "<error>".$e->getMessage()."</error>";
 			exit;
 		}
-
-################################
-# Handling time entry with clock
-################################
-
+#########################
+# Starting the tracking of a time entry
+#########################
     }elseif($_POST['action'] == 'startClock'){
+
+        if(preg_match('/^[1-9][0-9]*$/',$_POST['data']))  {
+            $a_data['mite_id'] = $_POST['data'];
+        }
 
         try {
             // get current tracking info
@@ -215,7 +218,9 @@
             echo "<error>".$e->getMessage()." mite_id: ".$a_data['mite_id']."</error>";
             exit;
         }
-
+#######################################
+# Stopping the tracking of a time entry
+#######################################
     }elseif($_POST['action'] == 'stopClock'){
         // get time entry from mite, resolve id + start time + minutes
         $o_responseXmlEntry = $o_miteRemote->sendRequest('get','/time_entries/'.$a_data['mite_id'].'.xml');
