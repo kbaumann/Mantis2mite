@@ -38,7 +38,7 @@
 
     ################## added start###################
     $mite = mite::getInstance();
-    $mite->init('################','####');
+    $mite->init('##########','####');
     $responseXML = $mite->sendRequest('get','/projects.xml');
     $mite_projects = $responseXML->xpath('project');
 
@@ -171,14 +171,14 @@
 ###########################################			
 	$s_output .= " 
 		<fieldset><legend>".lang_get('plugin_mite_header_new_time_entry')."</legend>
-			<div class='time_entry_param'>
+			<div class='time_entry_param inline'>
 				<label for='plugin_mite_date_new_time_entry'>".
 					lang_get('plugin_mite_header_date_new_time_entry')."
 				</label>
 				<input type='text' name='plugin_mite_date_new_time_entry'
 					   id='plugin_mite_date_new_time_entry' value='".date('Y-m-d')."' />
 			</div>
-			<div class='time_entry_param'>
+			<div id='duration' class='time_entry_param inline'>
                     <label for='plugin_mite_hours_new_time_entry'>".
         lang_get('plugin_mite_header_hours_new_time_entry')."
                     </label>

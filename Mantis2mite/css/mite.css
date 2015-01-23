@@ -212,7 +212,7 @@ div.plugin_mite_positive_connection_status, div.plugin_mite_negative_connection_
 }
 
 #plugin_mite_new_time_entry {
-	width: 400px;
+	width: 600px;
 	margin-bottom: 2em;
 	display: none;
 }
@@ -239,6 +239,14 @@ div.plugin_mite_positive_connection_status, div.plugin_mite_negative_connection_
 #plugin_mite_hours_new_time_entry {
     text-align: center;
     width: 2.5em;
+}
+
+.inline{
+    display: inline-block;
+}
+
+#duration{
+    margin-left: 1.5em;
 }
 
 #plugin_mite_note_new_time_entry {
