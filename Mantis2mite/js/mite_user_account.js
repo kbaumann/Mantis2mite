@@ -1,4 +1,4 @@
-$(window).load(function(){
+jQuery(window).load(function(){
 	
 	if (!MITE.isInitialized()) {
 		console.error('Error in "mite_user_account.js": Javascript object "MITE" was not initalized! ' +
@@ -31,15 +31,15 @@ var MITE_UA = function() {
  */	
 	var initVars = function() {
 		
-		$o_btnCheckAccountData 	    = $("#plugin_mite_check_account_data"),
-		$o_userBindings		   	    = $('#plugin_mite_user_bindings'),
-		$o_linkChangeAccountName    = $('#plugin_mite_change_account_name'),
-		$o_linkChangeApiKey		    = $('#plugin_mite_change_api_key'),
-		$o_fieldAccountName		    = $('#plugin_mite_account_name'),
-		$o_btnDisconnectAccountData = $('#plugin_mite_disconnect_account_data'),
-		$o_connectionStatus			= $("#plugin_mite_connection_status"),
-		$o_frmAccountData			= $("#frm_mite_account_data"),
-		$o_fieldApiKey		  	    = $('#plugin_mite_account_api_key');
+		$o_btnCheckAccountData 	    = jQuery("#plugin_mite_check_account_data"),
+		$o_userBindings		   	    = jQuery('#plugin_mite_user_bindings'),
+		$o_linkChangeAccountName    = jQuery('#plugin_mite_change_account_name'),
+		$o_linkChangeApiKey		    = jQuery('#plugin_mite_change_api_key'),
+		$o_fieldAccountName		    = jQuery('#plugin_mite_account_name'),
+		$o_btnDisconnectAccountData = jQuery('#plugin_mite_disconnect_account_data'),
+		$o_connectionStatus			= jQuery("#plugin_mite_connection_status"),
+		$o_frmAccountData			= jQuery("#frm_mite_account_data"),
+		$o_fieldApiKey		  	    = jQuery('#plugin_mite_account_api_key');
 	}//initVars
 	
 	
@@ -100,7 +100,7 @@ var MITE_UA = function() {
 		
 	// use case: the user CHANGED his ACCOUNT DATA
 	// actions: clear the old data of the last MITE connection get new data from a new MITE account
-		else if ($('.plugin_mite_positive_connection_status').length) {
+		else if (jQuery('.plugin_mite_positive_connection_status').length) {
 		
 			disconnectAccount(function(){processAccountData();});
 		}
@@ -125,7 +125,7 @@ var MITE_UA = function() {
 		$o_btnCheckAccountData.attr('disabled', true)
 							  .html(MITE.addIndicator(MITE.getMsg('checkingAccountData')));
 		
-		$.ajax({
+		jQuery.ajax({
 			type: "POST",
 			dataType: "xml",
 			url: MITE.makePartialPath('user_account_connect_and_update','xml'),
@@ -141,7 +141,7 @@ var MITE_UA = function() {
 			},
 			success: function(xmlData) {
 				
-				if ($(xmlData).find('messages').length) {
+				if (jQuery(xmlData).find('messages').length) {
 					
 					$o_connectionStatus.removeClass();
 					
@@ -168,7 +168,7 @@ var MITE_UA = function() {
 								  .removeClass().addClass('readonly')
 								  .replaceAll($o_fieldApiKey);
 				// refresh selector	
-					$o_fieldApiKey = $('#plugin_mite_account_api_key'); 
+					$o_fieldApiKey = jQuery('#plugin_mite_account_api_key'); 
 					
 				// set field for the API-Key 'readonly'	
 					$o_fieldApiKey.attr("readonly","readonly").removeClass().addClass('readonly');
@@ -181,16 +181,16 @@ var MITE_UA = function() {
 					$o_linkChangeApiKey.show();
 					
 				// resfresh selection since the dom has changed 
-					$("#plugin_mite_last_updated").html($(xmlData).find('messages').attr('datetimestamp'));
+					jQuery("#plugin_mite_last_updated").html(jQuery(xmlData).find('messages').attr('datetimestamp'));
 					initBindingArea();
 				}
-				else if ($(xmlData).find('errors').length) {
+				else if (jQuery(xmlData).find('errors').length) {
 					
 					$o_connectionStatus.removeClass();
 					
 					var s_errors = '';
 					
-					$(xmlData).find('error').each(function() {
+					jQuery(xmlData).find('error').each(function() {
 						s_errors += "<li>" + this.textContent + "</li>";
 					});
 					
@@ -229,7 +229,7 @@ var MITE_UA = function() {
 	// displays the loading info message
 		$o_userBindings.show();
 		
-		$.ajax({
+		jQuery.ajax({
 			dataType: "text",
 			url: MITE.makePartialPath('user_account_bindings_display','text'),
 			error: function(XMLHttpRequest, textStatus) {
@@ -261,7 +261,7 @@ var MITE_UA = function() {
 		$o_btnDisconnectAccountData.attr('disabled', true)
           							   .html(MITE.addIndicator(MITE.getMsg('disconnectingAccount')));
           	
-       	$.ajax({
+       	jQuery.ajax({
 			dataType: "xml",
 			url: MITE.makePartialPath('user_account_disconnect','xml'),
 			error: function(XMLHttpRequest, textStatus) {
@@ -293,8 +293,8 @@ var MITE_UA = function() {
 		$o_userBindings.hide();
 		$o_userBindings.html(data);
 	
-		var	$o_btnSaveBindings = $("#plugin_mite_save_bindings"),
-			$o_frmBindings 	   = $("#frm_mite_mantis_bindings");
+		var	$o_btnSaveBindings = jQuery("#plugin_mite_save_bindings"),
+			$o_frmBindings 	   = jQuery("#frm_mite_mantis_bindings");
 		
 	// unbind former events in case the bindingArea 
 	// gets initialized several times on one page visit 	
@@ -338,9 +338,9 @@ var MITE_UA = function() {
 			var s_oldText = $o_btnSaveBindings.html();
 				
 			$o_btnSaveBindings.attr('disabled', true)
-							  .html(MITE.addIndicator($("#plugin_mite_save_bindings_active").val()));
+							  .html(MITE.addIndicator(jQuery("#plugin_mite_save_bindings_active").val()));
 			
-			$.ajax({
+			jQuery.ajax({
 				type: "POST",
 				dataType: "xml",
 				url: MITE.makePartialPath('user_account_bindings_update','xml'),
@@ -394,7 +394,7 @@ var MITE_UA = function() {
 							  .replaceAll($o_fieldApiKey)
 							  .val('');//delete
 			// refresh selector	
-				$o_fieldApiKey = $('#plugin_mite_account_api_key');
+				$o_fieldApiKey = jQuery('#plugin_mite_account_api_key');
 			}
 			
 			e.preventDefault();							   
@@ -418,7 +418,7 @@ var MITE_UA = function() {
 								  .focus()
 								  .select();
 				// refresh selector	
-					$o_fieldApiKey = $('#plugin_mite_account_api_key');
+					$o_fieldApiKey = jQuery('#plugin_mite_account_api_key');
 					
 				// hide 'change' links	
 					$o_linkChangeAccountName.hide();
@@ -451,7 +451,7 @@ var MITE_UA = function() {
 								  .val('');//delete
 					
 				// refresh selector	
-					$o_fieldApiKey = $('#plugin_mite_account_api_key');
+					$o_fieldApiKey = jQuery('#plugin_mite_account_api_key');
 				
 				// hide the whole user bindings area
 					$o_userBindings.hide();
