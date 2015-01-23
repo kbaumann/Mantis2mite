@@ -126,7 +126,7 @@ class Mantis2mitePlugin extends MantisPlugin {
  * @private array
  */	
 	private $a_generalResources = array('css' => array('mite.css'),
-										'js'  => array('jquery-1.3.2.min.js','mite.js'));
+										'js'  => array('mite.js'));
 	
 	const API_RSRC_P   = 'projects';
 	const API_RSRC_S   = 'services';

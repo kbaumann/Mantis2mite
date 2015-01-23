@@ -1,4 +1,4 @@
-$(window).load(function(){
+jQuery(window).load(function(){
 	
 	if (!MITE.isInitialized()) {
 		console.error('Error in "mite_user_account.js": Javascript object "MITE" was not initalized! ' +
@@ -30,10 +30,10 @@ var MITE_TE = function() {
  */	
 	var initVars = function() {
 	
-		$o_frmNewTimeEntry = $('#plugin_mite_frm_new_time_entry'),
-		$o_newTimeEntry = $('#plugin_mite_new_time_entry'),
-		$o_linkShowNewTimeEntryFrm = $('#plugin_mite_show_new_time_entry_form a'),
-		$o_timeEntries = $('#plugin_mite_time_entries');
+		$o_frmNewTimeEntry = jQuery('#plugin_mite_frm_new_time_entry'),
+		$o_newTimeEntry = jQuery('#plugin_mite_new_time_entry'),
+		$o_linkShowNewTimeEntryFrm = jQuery('#plugin_mite_show_new_time_entry_form a'),
+		$o_timeEntries = jQuery('#plugin_mite_time_entries');
 	}
 	
 	
@@ -46,7 +46,7 @@ var MITE_TE = function() {
 			
 			$o_linkShowNewTimeEntryFrm.css({"color" : "#888888"});
 			$o_newTimeEntry.slideDown("slow",
-									  function(){$('#plugin_mite_date_new_time_entry').focus().select();});
+									  function(){jQuery('#plugin_mite_date_new_time_entry').focus().select();});
 			e.preventDefault();
 			return false;
 		});
@@ -58,11 +58,11 @@ var MITE_TE = function() {
  */	
 	var loadNewTimeEntryPartial = function() {
 			
-		$.ajax({
+		jQuery.ajax({
 			type: "GET",
 			dataType: "text",
-			data: {bug_id:$('#plugin_mite_current_bug').val(),
-				   project_id:$('#plugin_mite_current_project').val()},
+			data: {bug_id:jQuery('#plugin_mite_current_bug').val(),
+				   project_id:jQuery('#plugin_mite_current_project').val()},
 			url: MITE.makePartialPath('time_entry_form_fields_display','text'),
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
 				MITE.showMsg('error',MITE.getMsg('errorLoadingTimeEntries_fnf'));
@@ -89,11 +89,11 @@ var MITE_TE = function() {
 		
 		$o_timeEntries.html(MITE.addIndicator(MITE.getMsg('loadingTimeEntries')));
 		
-		$.ajax({
+		jQuery.ajax({
 			type: "GET",
 			dataType: "text",
-			data: {bug_id:$('#plugin_mite_current_bug').val(),
-				   project_id:$('#plugin_mite_current_project').val()},
+			data: {bug_id:jQuery('#plugin_mite_current_bug').val(),
+				   project_id:jQuery('#plugin_mite_current_project').val()},
 			url: MITE.makePartialPath('time_entries_display','text'),
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
 				MITE.showMsg('error',MITE.getMsg('errorLoadingTimeEntries_fnf'));
@@ -107,7 +107,7 @@ var MITE_TE = function() {
 				$o_timeEntries.html(data);
 	   		},
 	   		complete: function() {
-	   			$('#plugin_mite_loading_time_entries').hide();
+	   			jQuery('#plugin_mite_loading_time_entries').hide();
 	   			initTimeEntriesPartialHandler();
 	   		}
 		});
@@ -118,12 +118,12 @@ var MITE_TE = function() {
  */		
 	var initTimeEntriesPartialHandler = function() {
 		
-		var $o_btnDeleteEntry 			 	  = $('.plugin_mite_delete_time_entry'),
-            $o_btnStopClockEntry              = $('.plugin_mite_stop_clock'),
-            $o_btnStartClockEntry             = $('.plugin_mite_start_clock'),
-			$o_linksShowNote	  			  = $('.plugin_mite_time_entry_show_note'),
-			$o_linksShowOtherUsersTimeEntries = $('.plugin_mite_time_show_entries_other_user'),
-			$o_otherUsersTimeEntries  	 	  = $('.plugin_mite_time_entries_other_user'),
+		var $o_btnDeleteEntry 			 	  = jQuery('.plugin_mite_delete_time_entry'),
+            $o_btnStopClockEntry              = jQuery('.plugin_mite_stop_clock'),
+            $o_btnStartClockEntry             = jQuery('.plugin_mite_start_clock'),
+			$o_linksShowNote	  			  = jQuery('.plugin_mite_time_entry_show_note'),
+			$o_linksShowOtherUsersTimeEntries = jQuery('.plugin_mite_time_show_entries_other_user'),
+			$o_otherUsersTimeEntries  	 	  = jQuery('.plugin_mite_time_entries_other_user'),
 			s_initialTextDeleteTimeEntry 	  = $o_btnDeleteEntry.val(),
             s_initialTextStopClockEntry 	  = $o_btnStopClockEntry.val(),
             s_initialTextStartClockEntry 	  = $o_btnStartClockEntry.val(),
@@ -133,7 +133,7 @@ var MITE_TE = function() {
 		
 		$o_linksShowOtherUsersTimeEntries.each(function(i){
 			
-			$(this).click(function(e) {
+			jQuery(this).click(function(e) {
 				
 				$o_otherUsersTimeEntries.eq(i).toggle(0);
 				e.preventDefault();
@@ -143,7 +143,7 @@ var MITE_TE = function() {
 		});
 		
 		$o_linksShowNote.each(function(){
-			$(this).click(function(e) {
+			jQuery(this).click(function(e) {
 				e.preventDefault();
 				return false;
 			});
@@ -157,18 +157,18 @@ var MITE_TE = function() {
 	 */	
 		$o_btnDeleteEntry.each(function(){
 			
-			$(this).click(function(e) {
+			jQuery(this).click(function(e) {
 				
 				if (confirm(MITE.getMsg('confirmDeletingTimeEntry'))) {
 					
-					$(this).attr('disabled', true)
+					jQuery(this).attr('disabled', true)
 							.html(MITE.addIndicator(MITE.getMsg('deletingTimeEntry')));
 					
-					$.ajax({
+					jQuery.ajax({
 						type: "POST",
 						dataType: "xml",
 						data: {action:'deleteEntry',
-					   		   data:$(this).parent("form").serialize()},
+					   		   data:jQuery(this).parent("form").serialize()},
 						url: MITE.makePartialPath('time_entry_process','xml'),
 						error: function(XMLHttpRequest, textStatus, errorThrown) {
 							MITE.showMsg('error',MITE.getMsg('errorDeletingTimeEntry_fnf'));
@@ -197,12 +197,12 @@ var MITE_TE = function() {
 
         $o_btnStartClockEntry.each(function(){
 
-            $(this).click(function(e) {
-                $.ajax({
+            jQuery(this).click(function(e) {
+                jQuery.ajax({
                     type: "POST",
                     dataType: "xml",
                     data: {action:'startClock',
-                        data:$(this).parent("form").serialize()},
+                        data:jQuery(this).parent("form").serialize()},
                     url: MITE.makePartialPath('time_entry_process','xml'),
                     error: function(XMLHttpRequest, textStatus, errorThrown) {
                         MITE.showMsg('error',"Fehler beim Starten der Stopuhr");
@@ -225,12 +225,12 @@ var MITE_TE = function() {
 
         $o_btnStopClockEntry.each(function(){
 
-            $(this).click(function(e) {
-                $.ajax({
+            jQuery(this).click(function(e) {
+                jQuery.ajax({
                     type: "POST",
                     dataType: "xml",
                     data: {action:'stopClock',
-                        data:$(this).parent("form").serialize()},
+                        data:jQuery(this).parent("form").serialize()},
                     url: MITE.makePartialPath('time_entry_process','xml'),
                     error: function(XMLHttpRequest, textStatus, errorThrown) {
                         MITE.showMsg('error','Fehler beim Anhalten der Uhr');
@@ -245,7 +245,7 @@ var MITE_TE = function() {
                         loadTimeEntriesPartial();
                     }
                 });
-               // alert($(this).parent("form").serialize());
+               // alert(jQuery(this).parent("form").serialize());
 
                 e.preventDefault();
                 return false;
@@ -260,15 +260,15 @@ var MITE_TE = function() {
  */	
 	var initNewTimeEntryPartialHandler = function () {
 		
-		var	$o_btnAddNewTimeEntry 	  = $('#plugin_mite_add_new_time_entry'),
-			$o_linkCancelAdding 	  = $('#plugin_mite_cancel_adding_time_entry'),
-			$o_fieldDateNewTimeEntry  = $('#plugin_mite_date_new_time_entry'),
-			$o_fieldHoursNewTimeEntry = $('#plugin_mite_hours_new_time_entry'),
-			$o_fieldNoteNewTimeEntry  = $('#plugin_mite_note_new_time_entry'),
-			$o_sbProjectNewTimeEntry  = $('#plugin_mite_projects_new_time_entry'),
-			$o_sbServiceNewTimeEntry  = $('#plugin_mite_services_new_time_entry'),
-			$o_linkUserInputHelper	  = $('.plugin_mite_user_input_helper'),
-			$o_txtUserInputHelper	  = $('.plugin_mite_user_input_helper_text'),
+		var	$o_btnAddNewTimeEntry 	  = jQuery('#plugin_mite_add_new_time_entry'),
+			$o_linkCancelAdding 	  = jQuery('#plugin_mite_cancel_adding_time_entry'),
+			$o_fieldDateNewTimeEntry  = jQuery('#plugin_mite_date_new_time_entry'),
+			$o_fieldHoursNewTimeEntry = jQuery('#plugin_mite_hours_new_time_entry'),
+			$o_fieldNoteNewTimeEntry  = jQuery('#plugin_mite_note_new_time_entry'),
+			$o_sbProjectNewTimeEntry  = jQuery('#plugin_mite_projects_new_time_entry'),
+			$o_sbServiceNewTimeEntry  = jQuery('#plugin_mite_services_new_time_entry'),
+			$o_linkUserInputHelper	  = jQuery('.plugin_mite_user_input_helper'),
+			$o_txtUserInputHelper	  = jQuery('.plugin_mite_user_input_helper_text'),
 			s_initialDate 			  = $o_fieldDateNewTimeEntry.val();
 			s_initialNote 			  = $o_fieldNoteNewTimeEntry.val();
 		
@@ -346,7 +346,7 @@ var MITE_TE = function() {
 			
 			$o_fieldNoteNewTimeEntry.val($o_fieldNoteNewTimeEntry.val().replace(/\+/g,"@L@"));
 			
-			$.ajax({
+			jQuery.ajax({
 				type: "POST",
 				dataType: "xml",
 				data: {action:'addEntry',
@@ -367,11 +367,11 @@ var MITE_TE = function() {
                        alert("start clock");
 
 
-                        $.ajax({
+                        jQuery.ajax({
                             type: "POST",
                             dataType: "xml",
                             data: {action:'startClock',
-                                data:$(this).parent("form").serialize()},
+                                data:jQuery(this).parent("form").serialize()},
                             url: MITE.makePartialPath('time_entry_process','xml'),
                             error: function(XMLHttpRequest, textStatus, errorThrown) {
                                 MITE.showMsg('error',"Fehler beim Starten der Stopuhr");
@@ -417,9 +417,9 @@ var MITE_TE = function() {
 	 */
 		$o_linkUserInputHelper.each(function(i){
 			
-			$(this).mouseenter(function(){
+			jQuery(this).mouseenter(function(){
 				
-				$(this).hide();
+				jQuery(this).hide();
 				$o_txtUserInputHelper[i].style.display = 'inline';
 			});
 		});
@@ -429,10 +429,10 @@ var MITE_TE = function() {
 	 */	
 		$o_txtUserInputHelper.each(function(i){
 		
-			$(this).mouseleave(function(){
+			jQuery(this).mouseleave(function(){
 				
 				$o_linkUserInputHelper[i].style.display = 'inline';
-				$(this).hide();
+				jQuery(this).hide();
 			});
 		});
 	}

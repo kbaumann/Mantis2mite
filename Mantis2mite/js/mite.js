@@ -1,11 +1,11 @@
-$(window).load(function(){
+jQuery(window).load(function( $ ) {
 	
 // show elements hidden for users with deactivated javascript 
-	$('.plugin_mite_hide_if_no_javascript').each(function(){
-		$(this).show();
+    jQuery('.plugin_mite_hide_if_no_javascript').each(function(){
+        jQuery(this).show();
 	});
 	
-	if ($('#plugin_mite_messages').length)
+	if (jQuery('#plugin_mite_messages').length)
 		MITE.init();
 	else {
 		console.error('Error in "mite.js": Could not setup object "MITE" due to missing document object ' +
@@ -38,58 +38,58 @@ var MITE = function() {
 	var initVars = function () {
 		
 	// general vars	
-		s_pathPartialHandler = $("#plugin_mite_path").val() + 'partials/handlePartial.php';
-		s_pathImages = $("#plugin_mite_path").val() + 'images/' 
+		s_pathPartialHandler = jQuery("#plugin_mite_path").val() + 'partials/handlePartial.php';
+		s_pathImages = jQuery("#plugin_mite_path").val() + 'images/'
 		
 	// selectors	
-		$o_messageBox	   = $('#plugin_mite_messages div:first');
-		$o_messageBoxMsg   = $('#plugin_mite_messages p:first');
-		$o_messageBoxClose = $('#plugin_mite_messages a:first');
-		$o_miteLastUpdated = $("#plugin_mite_last_updated");
+		$o_messageBox	   = jQuery('#plugin_mite_messages div:first');
+		$o_messageBoxMsg   = jQuery('#plugin_mite_messages p:first');
+		$o_messageBoxClose = jQuery('#plugin_mite_messages a:first');
+		$o_miteLastUpdated = jQuery("#plugin_mite_last_updated");
 		
 	// messages
 	// fnf = file not found	
 		
 	// general
-		a_messages['databaseError'] = $("#plugin_mite_msg_database_error").val();
+		a_messages['databaseError'] = jQuery("#plugin_mite_msg_database_error").val();
 			
 		
 	// user page	
-		a_messages['connectionVerified'] = $("#plugin_mite_txt_connection_verified").val();
-		a_messages['connectionUnverified'] = $("#plugin_mite_txt_connection_unverified").val();
-		a_messages['checkingAccountData'] = $("#plugin_mite_txt_check_account_data_active").val();
-		a_messages['successVerification'] = $("#plugin_mite_msg_success_verification").val();
-		a_messages['errorVerification'] = $("#plugin_mite_msg_error_verification").val();
-		a_messages['successUpdatingAccountData'] = $("#plugin_mite_msg_success_updating_account_data").val();
-		a_messages['errorUpdatingAccountData'] = $("#plugin_mite_txt_error_updating_account_data").val();
-		a_messages['missingAccountData'] = $("#plugin_mite_msg_missing_account_data").val();
-		a_messages['successSavingBindings'] = $("#plugin_mite_msg_success_saving_bindings").val();
-		a_messages['errorSavingBindings'] = $("#plugin_mite_msg_error_saving_bindings").val();
-		a_messages['confirmChangingApiKey'] = $("#plugin_mite_msg_confirm_changing_api_key").val();
-		a_messages['confirmDisconnectingAccount'] = $("#plugin_mite_msg_confirm_disconnecting_account").val();
-		a_messages['confirmChangingAccount'] = $("#plugin_mite_msg_confirm_changing_account").val();
-		a_messages['successDisconnectingAccount'] = $("#plugin_mite_msg_success_disconnecting_account").val();
-		a_messages['disconnectingAccount'] = $("#plugin_mite_disconnecting_account_data_active").val();
-		a_messages['errorDisconnectingAccount'] = $("#plugin_mite_msg_error_disconnecting_account").val();
-		a_messages['loadingBindingsArea'] = $("#plugin_mite_txt_loading_user_bindings").val();
-		a_messages['errorLoadingBindingArea'] = $("#plugin_mite_msg_error_loading_binding_area").val();
-		a_messages['savingBindings'] = $("#plugin_mite_save_bindings_active").val();
+		a_messages['connectionVerified'] = jQuery("#plugin_mite_txt_connection_verified").val();
+		a_messages['connectionUnverified'] = jQuery("#plugin_mite_txt_connection_unverified").val();
+		a_messages['checkingAccountData'] = jQuery("#plugin_mite_txt_check_account_data_active").val();
+		a_messages['successVerification'] = jQuery("#plugin_mite_msg_success_verification").val();
+		a_messages['errorVerification'] = jQuery("#plugin_mite_msg_error_verification").val();
+		a_messages['successUpdatingAccountData'] = jQuery("#plugin_mite_msg_success_updating_account_data").val();
+		a_messages['errorUpdatingAccountData'] = jQuery("#plugin_mite_txt_error_updating_account_data").val();
+		a_messages['missingAccountData'] = jQuery("#plugin_mite_msg_missing_account_data").val();
+		a_messages['successSavingBindings'] = jQuery("#plugin_mite_msg_success_saving_bindings").val();
+		a_messages['errorSavingBindings'] = jQuery("#plugin_mite_msg_error_saving_bindings").val();
+		a_messages['confirmChangingApiKey'] = jQuery("#plugin_mite_msg_confirm_changing_api_key").val();
+		a_messages['confirmDisconnectingAccount'] = jQuery("#plugin_mite_msg_confirm_disconnecting_account").val();
+		a_messages['confirmChangingAccount'] = jQuery("#plugin_mite_msg_confirm_changing_account").val();
+		a_messages['successDisconnectingAccount'] = jQuery("#plugin_mite_msg_success_disconnecting_account").val();
+		a_messages['disconnectingAccount'] = jQuery("#plugin_mite_disconnecting_account_data_active").val();
+		a_messages['errorDisconnectingAccount'] = jQuery("#plugin_mite_msg_error_disconnecting_account").val();
+		a_messages['loadingBindingsArea'] = jQuery("#plugin_mite_txt_loading_user_bindings").val();
+		a_messages['errorLoadingBindingArea'] = jQuery("#plugin_mite_msg_error_loading_binding_area").val();
+		a_messages['savingBindings'] = jQuery("#plugin_mite_save_bindings_active").val();
 		
 	// time entries	
-		a_messages['loadingTimeEntries'] = $("#plugin_mite_loading_time_entries").val();
-		a_messages['errorAddingTimeEntry_fnf'] = $("#plugin_mite_msg_error_adding_time_entry_fnf").val();
-		a_messages['errorAddingTimeEntry'] = $("#plugin_mite_msg_error_adding_time_entry").val();
-		a_messages['successAddingTimeEntry'] = $("#plugin_mite_msg_success_adding_time_entry").val();
-		a_messages['errorLoadingTimeEntries_fnf'] = $("#plugin_mite_msg_error_loading_time_entries_fnf").val();
-		a_messages['missingTimeEntryHours'] = $("#plugin_mite_msg_missing_time_entry_hours").val();
-		a_messages['addingNewTimeEntry'] = $("#plugin_mite_msg_adding_new_time_entry").val();
-		a_messages['showNewEntryForm'] = $("#plugin_mite_show_new_time_entry_form").val();
-		a_messages['confirmDeletingTimeEntry'] = $("#plugin_mite_confirm_deleting_time_entry").val();
-		a_messages['errorDeletingTimeEntry_fnf'] = $("#plugin_mite_msg_error_deleting_time_entry_fnf").val();
-		a_messages['deletingTimeEntry'] = $("#plugin_mite_deleting_time_entry").val();
-		a_messages['successDeletingTimeEntry'] = $("#plugin_mite_msg_success_deleting_time_entry").val();
-		a_messages['errorDeletingTimeEntry'] = $("#plugin_mite_msg_error_deleting_time_entry").val();
-		a_messages['invalidDate'] = $("#plugin_mite_msg_error_invalid_date").val();
+		a_messages['loadingTimeEntries'] = jQuery("#plugin_mite_loading_time_entries").val();
+		a_messages['errorAddingTimeEntry_fnf'] = jQuery("#plugin_mite_msg_error_adding_time_entry_fnf").val();
+		a_messages['errorAddingTimeEntry'] = jQuery("#plugin_mite_msg_error_adding_time_entry").val();
+		a_messages['successAddingTimeEntry'] = jQuery("#plugin_mite_msg_success_adding_time_entry").val();
+		a_messages['errorLoadingTimeEntries_fnf'] = jQuery("#plugin_mite_msg_error_loading_time_entries_fnf").val();
+		a_messages['missingTimeEntryHours'] = jQuery("#plugin_mite_msg_missing_time_entry_hours").val();
+		a_messages['addingNewTimeEntry'] = jQuery("#plugin_mite_msg_adding_new_time_entry").val();
+		a_messages['showNewEntryForm'] = jQuery("#plugin_mite_show_new_time_entry_form").val();
+		a_messages['confirmDeletingTimeEntry'] = jQuery("#plugin_mite_confirm_deleting_time_entry").val();
+		a_messages['errorDeletingTimeEntry_fnf'] = jQuery("#plugin_mite_msg_error_deleting_time_entry_fnf").val();
+		a_messages['deletingTimeEntry'] = jQuery("#plugin_mite_deleting_time_entry").val();
+		a_messages['successDeletingTimeEntry'] = jQuery("#plugin_mite_msg_success_deleting_time_entry").val();
+		a_messages['errorDeletingTimeEntry'] = jQuery("#plugin_mite_msg_error_deleting_time_entry").val();
+		a_messages['invalidDate'] = jQuery("#plugin_mite_msg_error_invalid_date").val();
 		
 	// states
 		a_states['connectionActive'] = ($o_miteLastUpdated.length) ? true : false;	
@@ -244,7 +244,7 @@ var MITE = function() {
 	 */		
 		checkXMLData : function (xmlData,s_msgBase,fn_success,fn_error) {
 		
-			if ($(xmlData).find('messages').length) {
+			if (jQuery(xmlData).find('messages').length) {
 				MITE.showMsg("success",MITE.getMsg('success' + s_msgBase));
 				
 				if (fn_success) fn_success();
@@ -253,11 +253,11 @@ var MITE = function() {
 			else {
 				
 			// if the xml message contains error nodes there was an unexpected error	
-				if ($(xmlData).find('error').length) {
+				if (jQuery(xmlData).find('error').length) {
 					
 					var s_errors = '';
 						
-					$(xmlData).find('error').each(function() {
+					jQuery(xmlData).find('error').each(function() {
 						s_errors += "<li>" + this.textContent + "</li>";
 					});
 					
